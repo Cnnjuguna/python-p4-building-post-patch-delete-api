@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+
 from random import randint, choice as rc
 
 from faker import Faker
 
-from app import app
-from models import db, Game, Review, User
+from app import app, db
+from models import Game, Review, User
 
 genres = [
     "Platformer",
@@ -32,7 +33,7 @@ genres = [
     "Sports",
     "Party",
     "Trivia",
-    "Sandbox"
+    "Sandbox",
 ]
 
 platforms = [
@@ -66,14 +67,15 @@ platforms = [
 fake = Faker()
 
 with app.app_context():
-
     Review.query.delete()
     User.query.delete()
     Game.query.delete()
 
     users = []
     for i in range(100):
-        u = User(name=fake.name(),)
+        u = User(
+            name=fake.name(),
+        )
         users.append(u)
 
     db.session.add_all(users)
@@ -93,11 +95,7 @@ with app.app_context():
     reviews = []
     for u in users:
         for i in range(randint(1, 10)):
-            r = Review(
-                score=randint(0, 10),
-                comment=fake.sentence(),
-                user=u,
-                game=rc(games))
+            r = Review(score=randint(0, 10), comment=fake.sentence(), user=u, game=rc(games))
             reviews.append(r)
 
     db.session.add_all(reviews)
